@@ -1,0 +1,81 @@
+{
+	Camera.kn v1.00 (for Kuin 1.00):
+		Last Modified: 2013/11/20 04:14:30.
+		Created by Tatt(@tatt61880)
+		https://twitter.com/tatt61880
+		https://github.com/tatt61880
+
+	3Dのカメラを動かすライブラリです。
+}
+class Camera()
+	-var pos: Vector
+	-var dir: Vector
+	-var up: Vector
+	func Init(x: float, y: float, z: float): @Camera
+		do this.pos :: (#Vector).Init(x, y, z)
+		do this.dir :: (#Vector).Init(0.0, 0.0, 1.0)
+		do this.up  :: (#Vector).Init(0.0, 1.0, 0.0)
+		return this
+	end func
+	func RotHor(angle: float)
+		{up周りの回転. 右ねじの回転が正}
+		do this.RotDir(this.dir, this.up, angle)
+		{
+		do Dbg@Log("[Camera.kn] dir = " ~ this.dir.ToStr())
+		}
+	end func
+	func RotVer(angle: float)
+		{dirとupの外積(cross). cross周りの回転. dirをup方向に回転させる向きが正}
+		var cross: Vector :: (#Vector).Init(this.up.y * this.dir.z - this.up.z * this.dir.y, this.up.z * this.dir.x - this.up.x * this.dir.z, this.up.x * this.dir.y - this.up.y * this.dir.x)
+		do this.RotDir(this.dir, cross, angle)
+		do this.RotDir(this.up, cross, angle)
+		{
+		do Dbg@Log("[Camera.kn] dir   = " ~ this.dir.ToStr())
+		do Dbg@Log("[Camera.kn] up    = " ~ this.up.ToStr())
+		do Dbg@Log("[Camera.kn] cross = " ~ cross.ToStr())
+		}
+	end func
+
+	-func RotDir(dir: Vector, axis: Vector, angle: float)
+		var cos: float :: Lib@Cos(angle)
+		var sin: float :: Lib@Sin(angle)
+		var d: Vector :: ##dir
+		do dir.x ::  (axis.x * axis.x * (1.0 - cos) +          cos) * d.x + (axis.x * axis.y * (1.0 - cos) - axis.z * sin) * d.y + (axis.z * axis.x * (1.0 - cos) + axis.y * sin) * d.z
+		do dir.y ::  (axis.x * axis.y * (1.0 - cos) + axis.z * sin) * d.x + (axis.y * axis.y * (1.0 - cos) +          cos) * d.y + (axis.y * axis.z * (1.0 - cos) - axis.x * sin) * d.z
+		do dir.z ::  (axis.z * axis.x * (1.0 - cos) - axis.y * sin) * d.x + (axis.y * axis.z * (1.0 - cos) + axis.x * sin) * d.y + (axis.z * axis.z * (1.0 - cos) +          cos) * d.z
+	end func
+
+	func MoveDir(x: float)
+		do this.pos.x :+ this.dir.x * x
+		do this.pos.y :+ this.dir.y * x
+		do this.pos.z :+ this.dir.z * x
+	end func
+	func MoveRel(x: float, y: float, z: float)
+		do this.pos.x :+ x
+		do this.pos.y :+ y
+		do this.pos.z :+ z
+	end func
+	func MoveAbx(x: float, y: float, z: float)
+		do this.pos.x :: x
+		do this.pos.y :: y
+		do this.pos.z :: z
+	end func
+	func SetCamera()
+		do Draw@SetCamera(this.pos.x, this.pos.y, this.pos.z, (this.pos.x + this.dir.x), (this.pos.y + this.dir.y), (this.pos.z + this.dir.z), this.up.x, this.up.y, this.up.z)
+	end func
+	class Vector()
+		var x: float
+		var y: float
+		var z: float
+		func Init(x: float, y: float, z: float): Vector
+			do this.x :: x
+			do this.y :: y
+			do this.z :: z
+			return this
+		end func
+		func ToStr(): []char
+			return "(" ~ this.x.ToStr() ~ ", " ~ this.y.ToStr() ~ ", " ~ this.z.ToStr() ~ ")"
+		end func
+	end class
+end class
+

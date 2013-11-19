@@ -1,0 +1,42 @@
+func Init(cfg: Kuin@CCfg)
+	do cfg.Title :: "CameraTest v1.00"
+end func
+
+func Main()
+	var box: Draw@CObj :: Draw@LoadObj("box.knobj")
+	var diceTex: Draw@CTex :: Draw@LoadTex("dice.kntex")
+
+	do box.MoveReset()
+	do box.MoveScale(0.5, 0.5, 0.5)
+	do box.MoveTrans(0.0, 0.0, 0.0)
+	var camera: Camera@Camera :: (#Camera@Camera).Init(0.0, 0.0, -20.0)
+	while()
+		do Kuin@Act()
+		do box.Draw(diceTex, null, 0, 0.0)
+		if(Input@Pad(0, Input@EBtn#Left) > 0)
+			do camera.RotHor(0.03)
+		end if
+		if(Input@Pad(0, Input@EBtn#Right) > 0)
+			do camera.RotHor(-0.03)
+		end if
+		if(Input@Pad(0, Input@EBtn#Up) > 0)
+			do camera.RotVer(0.03)
+		end if
+		if(Input@Pad(0, Input@EBtn#Down) > 0)
+			do camera.RotVer(-0.03)
+		end if
+		if(Input@Pad(0, Input@EBtn#R) > 0 | Input@Pad(0, Input@EBtn#A) > 0 | Input@Pad(0, Input@EBtn#C) > 0)
+			do camera.MoveDir(0.2)
+		end if
+		if(Input@Pad(0, Input@EBtn#L) > 0 | Input@Pad(0, Input@EBtn#B) > 0 | Input@Pad(0, Input@EBtn#D) > 0)
+			do camera.MoveDir(-0.2)
+		end if
+		do camera.SetCamera()
+
+		{FPSチェック。点滅する白い点が赤い点の上になければ、FPSが低下しています}
+		do Draw@Rect(60.0, 0.0, 5.0, 5.0, 1.0, 0.0, 0.0, 1.0)
+		if((Kuin@Cnt() / 10) % 3 <> 0)
+			do Draw@Rect((Kuin@FPS() * 60.0), 0.0, 5.0, 5.0, 1.0, 1.0, 1.0, 1.0)
+		end if
+	end while
+end func
