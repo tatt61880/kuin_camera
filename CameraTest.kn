@@ -9,9 +9,11 @@ func Main()
 	do box.MoveReset()
 	do box.MoveScale(0.5, 0.5, 0.5)
 	do box.MoveTrans(0.0, 0.0, 0.0)
-	var camera: Camera@Camera :: (#Camera@Camera).Init(0.0, 0.0, -20.0)
+	var cameraInit: Camera@Camera :: (#Camera@Camera).Init(0.0, 0.0, 20.0)
+	var camera: Camera@Camera :: ##cameraInit
 	while()
 		do Kuin@Act()
+		do Draw@Rect(0.0, 0.0, 1600.0, 900.0, 0.3, 0.4, 1.0, 1.0)
 		do box.Draw(diceTex, null, 0, 0.0)
 		if(Input@Pad(0, Input@EBtn#Left) > 0)
 			do camera.RotHor(0.03)
@@ -25,11 +27,17 @@ func Main()
 		if(Input@Pad(0, Input@EBtn#Down) > 0)
 			do camera.RotVer(-0.03)
 		end if
+		var f: bool :: false
 		if(Input@Pad(0, Input@EBtn#R) > 0 | Input@Pad(0, Input@EBtn#A) > 0 | Input@Pad(0, Input@EBtn#C) > 0)
+			do f :: true
 			do camera.MoveDir(0.2)
 		end if
 		if(Input@Pad(0, Input@EBtn#L) > 0 | Input@Pad(0, Input@EBtn#B) > 0 | Input@Pad(0, Input@EBtn#D) > 0)
-			do camera.MoveDir(-0.2)
+			if(f)
+				do camera :: ##cameraInit
+			else
+				do camera.MoveDir(-0.2)
+			end if
 		end if
 		do camera.SetCamera()
 

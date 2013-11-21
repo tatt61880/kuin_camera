@@ -1,6 +1,6 @@
 {
 	Camera.kn v1.00 (for Kuin 1.00):
-		Last Modified: 2013/11/20 04:14:30.
+		Last Modified: 2013/11/22 02:44:27.
 		Created by Tatt(@tatt61880)
 		https://twitter.com/tatt61880
 		https://github.com/tatt61880
@@ -13,7 +13,7 @@ class Camera()
 	-var up: Vector
 	func Init(x: float, y: float, z: float): @Camera
 		do this.pos :: (#Vector).Init(x, y, z)
-		do this.dir :: (#Vector).Init(0.0, 0.0, 1.0)
+		do this.dir :: (#Vector).Init(0.0, 0.0, -1.0)
 		do this.up  :: (#Vector).Init(0.0, 1.0, 0.0)
 		return this
 	end func
@@ -55,7 +55,7 @@ class Camera()
 		do this.pos.y :+ y
 		do this.pos.z :+ z
 	end func
-	func MoveAbx(x: float, y: float, z: float)
+	func MoveAbs(x: float, y: float, z: float)
 		do this.pos.x :: x
 		do this.pos.y :: y
 		do this.pos.z :: z
