@@ -1,5 +1,5 @@
-Camera.kn v1.00 (for Kuin 1.00):
-    Last Modified: 2013/11/22 01:48:58.
+Camera.kn v1.02 (for Kuin 1.02):
+    Last Modified: 2014/12/28 20:39:47.
     Created by Tatt(@tatt61880)
     https://twitter.com/tatt61880
     https://github.com/tatt61880
