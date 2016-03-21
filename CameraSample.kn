@@ -1,5 +1,39 @@
 func Init(cfg: Kuin@CCfg)
-	do cfg.Title :: "CameraTest v1.02"
+	do cfg.Title :: "CameraSample v1.03"
+end func
+
+func InitCamera(camera :&Camera@CCamera)
+	do camera :: (#Camera@CCamera).Init(0.0, 0.0, 20.0)
+end func
+
+func MoveCamera(camera :&Camera@CCamera)
+	if(Input@Pad(0, Input@EBtn#Left) > 0)
+		do camera.RotRelHor(0.03)
+	end if
+	if(Input@Pad(0, Input@EBtn#Right) > 0)
+		do camera.RotRelHor(-0.03)
+	end if
+	if(Input@Pad(0, Input@EBtn#Up) > 0)
+		do camera.RotRelVer(0.03)
+	end if
+	if(Input@Pad(0, Input@EBtn#Down) > 0)
+		do camera.RotRelVer(-0.03)
+	end if
+	if(Input@Pad(0, Input@EBtn#C) > 0)
+		do camera.RotRelUp(0.03)
+	end if
+	if(Input@Pad(0, Input@EBtn#D) > 0)
+		do camera.RotRelUp(-0.03)
+	end if
+	if(Input@Pad(0, Input@EBtn#R) > 0 | Input@Pad(0, Input@EBtn#A) > 0)
+		do camera.MoveDir(1.0)
+	end if
+	if(Input@Pad(0, Input@EBtn#L) > 0 | Input@Pad(0, Input@EBtn#B) > 0)
+		do camera.MoveDir(-1.0)
+	end if
+	if(Input@Pad(0, Input@EBtn#C) > 0 & Input@Pad(0, Input@EBtn#D) > 0)
+		do @InitCamera(&camera)
+	end if
 end func
 
 func Main()
@@ -9,49 +43,21 @@ func Main()
 	do box.MoveReset()
 	do box.MoveScale(0.5, 0.5, 0.5)
 	do box.MoveTrans(0.0, 0.0, 0.0)
-	var cameraInit: Camera@CCamera :: (#Camera@CCamera).Init(0.0, 0.0, 20.0)
-	var camera: Camera@CCamera :: ##cameraInit
+
+	var camera: Camera@CCamera
+	do @InitCamera(&camera)
+
 	while()
 		do Kuin@Act()
-		do Draw@Rect(0.0, 0.0, 1600.0, 900.0, 0.3, 0.4, 1.0, 1.0)
+		do Draw@Rect(0.0, 0.0, 1600.0, 900.0, 0.3, 0.4, 1.0, 1.0) {背景}
 		do box.Draw(diceTex, null, 0, 0.0)
-
-		if(Input@Pad(0, Input@EBtn#Left) > 0)
-			do camera.RotRelHor(0.03)
-		end if
-		if(Input@Pad(0, Input@EBtn#Right) > 0)
-			do camera.RotRelHor(-0.03)
-		end if
-		if(Input@Pad(0, Input@EBtn#Up) > 0)
-			do camera.RotRelVer(0.03)
-		end if
-		if(Input@Pad(0, Input@EBtn#Down) > 0)
-			do camera.RotRelVer(-0.03)
-		end if
-		if(Input@Pad(0, Input@EBtn#C) > 0)
-			do camera.RotRelUp(0.03)
-		end if
-		if(Input@Pad(0, Input@EBtn#D) > 0)
-			do camera.RotRelUp(-0.03)
-		end if
-		var f: bool :: false
-		if(Input@Pad(0, Input@EBtn#R) > 0 | Input@Pad(0, Input@EBtn#A) > 0)
-			do f :: true
-			do camera.MoveDir(0.2)
-		end if
-		if(Input@Pad(0, Input@EBtn#L) > 0 | Input@Pad(0, Input@EBtn#B) > 0)
-			if(f)
-				do camera :: ##cameraInit
-			else
-				do camera.MoveDir(-0.2)
-			end if
-		end if
-		do camera.SetCamera()
-
-		{FPSチェック。点滅する白い点が赤い点の上になければ、FPSが低下しています}
-		do Draw@Rect(60.0, 0.0, 5.0, 5.0, 1.0, 0.0, 0.0, 1.0)
+		{FPSチェック。点滅する緑色の点が赤い点の上になければ、FPSが低下しています}
+		do Draw@Rect(100.0, 0.0, 10.0, 10.0, 1.0, 0.0, 0.0, 1.0)
 		if((Kuin@Cnt() / 10) % 3 <> 0)
-			do Draw@Rect((Kuin@FPS() * 60.0), 0.0, 5.0, 5.0, 1.0, 1.0, 1.0, 1.0)
+			do Draw@Rect((Kuin@FPS() * 100.0), 0.0, 10.0, 10.0, 0.0, 1.0, 0.0, 1.0)
 		end if
+
+		do @MoveCamera(&camera)
+		do camera.SetCamera()
 	end while
 end func

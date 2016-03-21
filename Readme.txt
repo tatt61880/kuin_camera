@@ -1,5 +1,5 @@
-Camera.kn v1.02 (for Kuin 1.02):
-    Last Modified: 2014/12/28 20:39:47.
+Camera.kn v1.02 (for Kuin 1.01):
+    Last Modified: 2016/03/21 23:47:46.
     Created by Tatt(@tatt61880)
     https://twitter.com/tatt61880
     https://github.com/tatt61880
@@ -10,14 +10,14 @@ Camera.kn v1.02 (for Kuin 1.02):
     Camera.kn
         ライブラリ本体です。
 
-    CameraTest.kn
+    CameraSample.kn
         Cameraライブラリの使用例です。
         【操作方法】
         ・視点の向きを変更: 十字キー
-        ・前進: Rボタン, Aボタン, Cボタン のどれでも
-        ・後退: Lボタン, Bボタン, Dボタン のどれでも
-        ・視点のリセット: 前進と後退の同時押し
-
+        ・前進: Rボタン あるいは Aボタン
+        ・後退: Lボタン あるいは Bボタン
+        ・視点の回転: Cボタン あるいは Dボタン
+        ・視点のリセット: CボタンとDボタンの同時押し
     Resフォルダ
         CameraTest.exe で使用するオブジェクトファイル(box.knobj)やテクスチャファイル(dice.kntex)が入ったフォルダです。
         box.knobjはKuinの作者であるくいなちゃんが作成したものを使用しています。

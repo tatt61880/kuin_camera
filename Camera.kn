@@ -1,6 +1,6 @@
 {
-	Camera.kn v1.02 (for Kuin 1.02):
-		Last Modified: 2014/12/28 21:06:39.
+	Camera.kn v1.02 (for Kuin 1.01):
+		Last Modified: 2016/03/21 23:43:19.
 		Created by Tatt(@tatt61880)
 		https://twitter.com/tatt61880
 		https://github.com/tatt61880
@@ -103,4 +103,3 @@ class CCamera()
 		end func
 	end class
 end class
-
