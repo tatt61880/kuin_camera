@@ -1,6 +1,6 @@
 {
 	camera.kn:
-		Last Modified: 2019/11/23 21:45:11.
+		Last Modified: 2019/11/23 22:25:45.
 		Created by Tatt(@tatt61880)
 		https://twitter.com/tatt61880
 		https://github.com/tatt61880
@@ -19,14 +19,6 @@
 		ret me
 	end func
 	
-	+func rot(horAngle: float, verAngle: float)
-		do me.dir :: (#Vector).init(0.0, 0.0, -1.0)
-		; var up_backup: Vector :: ##me.up
-		do me.rotRelHor(horAngle)
-		do me.rotRelVer(verAngle)
-		; do me.up :: up_backup
-	end func
-	
 	+func rotRel(horAngle: float, verAngle: float)
 		do me.rotRelHor(horAngle)
 		do me.rotRelVer(verAngle)
@@ -34,32 +26,23 @@
 	
 	+func rotRelHor(angle: float)
 		{up周りの回転. 右ねじの回転が正}
-		do me.rotDir(me.dir, me.up, angle)
-		; do cui@printg("[camera.kn] dir = " ~ me.dir.toStr())
+		do me.dir.rot(me.up, angle)
+		; do cui@print("[camera.kn] dir = " ~ me.dir.toStr())
 	end func
 	
 	+func rotRelVer(angle: float)
 		{dirとupの外積(cross). cross周りの回転. dirをup方向に回転させる向きが正}
 		var cross: Vector :: (#Vector).init(me.up.y * me.dir.z - me.up.z * me.dir.y, me.up.z * me.dir.x - me.up.x * me.dir.z, me.up.x * me.dir.y - me.up.y * me.dir.x)
-		do me.rotDir(me.dir, cross, angle)
-		do me.rotDir(me.up, cross, angle)
-		; do cui@printg("[camera.kn] dir   = " ~ me.dir.toStr())
-		; do cui@printg("[camera.kn] up    = " ~ me.up.toStr())
-		; do cui@printg("[camera.kn] cross = " ~ cross.toStr())
+		do me.dir.rot(cross, angle)
+		do me.up.rot(cross, angle)
+		; do cui@print("[camera.kn] dir   = " ~ me.dir.toStr())
+		; do cui@print("[camera.kn] up    = " ~ me.up.toStr())
+		; do cui@print("[camera.kn] cross = " ~ cross.toStr())
 	end func
 	
 	+func rotRelUp(angle: float)
 		{upを回転．右ねじの回転が正}
-		do me.rotDir(me.up, me.dir, angle)
-	end func
-	
-	func rotDir(dir: Vector, axis: Vector, angle: float)
-		var cos: float :: lib@cos(angle)
-		var sin: float :: lib@sin(angle)
-		var d: Vector :: ##dir
-		do dir.x :: (axis.x * axis.x * (1.0 - cos) + cos) * d.x + (axis.x * axis.y * (1.0 - cos) - axis.z * sin) * d.y + (axis.z * axis.x * (1.0 - cos) + axis.y * sin) * d.z
-		do dir.y :: (axis.x * axis.y * (1.0 - cos) + axis.z * sin) * d.x + (axis.y * axis.y * (1.0 - cos) + cos) * d.y + (axis.y * axis.z * (1.0 - cos) - axis.x * sin) * d.z
-		do dir.z :: (axis.z * axis.x * (1.0 - cos) - axis.y * sin) * d.x + (axis.y * axis.z * (1.0 - cos) + axis.x * sin) * d.y + (axis.z * axis.z * (1.0 - cos) + cos) * d.z
+		do me.up.rot(me.dir, angle)
 	end func
 	
 	+func moveDir(d: float)
@@ -94,6 +77,15 @@
 			do me.y :: y
 			do me.z :: z
 			ret me
+		end func
+		
+		+func rot(axis: Vector, angle: float)
+			var cos: float :: lib@cos(angle)
+			var sin: float :: lib@sin(angle)
+			var d: Vector :: ##me
+			do me.x :: (axis.x * axis.x * (1.0 - cos) + cos) * d.x + (axis.x * axis.y * (1.0 - cos) - axis.z * sin) * d.y + (axis.z * axis.x * (1.0 - cos) + axis.y * sin) * d.z
+			do me.y :: (axis.x * axis.y * (1.0 - cos) + axis.z * sin) * d.x + (axis.y * axis.y * (1.0 - cos) + cos) * d.y + (axis.y * axis.z * (1.0 - cos) - axis.x * sin) * d.z
+			do me.z :: (axis.z * axis.x * (1.0 - cos) - axis.y * sin) * d.x + (axis.y * axis.z * (1.0 - cos) + axis.x * sin) * d.y + (axis.z * axis.z * (1.0 - cos) + cos) * d.z
 		end func
 		
 		+*func toStr(): []char
