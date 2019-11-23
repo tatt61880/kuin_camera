@@ -1,5 +1,5 @@
-camera.kn v2.00:
-    Last Modified: 2019/11/23 10:29:02.
+camera.kn:
+    Last Modified: 2019/11/23 21:28:34.
     Created by Tatt(@tatt61880)
     https://twitter.com/tatt61880
     https://github.com/tatt61880
@@ -18,6 +18,7 @@ camera.kn v2.00:
         ・後退: Lボタン あるいは Bボタン
         ・視点の回転: Cボタン あるいは Dボタン
         ・視点のリセット: CボタンとDボタンの同時押し
+
     resフォルダ
         CameraTest.exe で使用するオブジェクトファイル(box.knobj)やテクスチャファイル(tex.png)が入ったフォルダです。
         box.knobjはKuinの作者であるくいなちゃんが作成したものを使用しています。
