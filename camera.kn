@@ -1,6 +1,6 @@
 {
 	camera.kn:
-		Last Modified: 2019/11/23 22:25:45.
+		Last Modified: 2019/11/23 22:38:24.
 		Created by Tatt(@tatt61880)
 		https://twitter.com/tatt61880
 		https://github.com/tatt61880
@@ -32,7 +32,7 @@
 	
 	+func rotRelVer(angle: float)
 		{dirとupの外積(cross). cross周りの回転. dirをup方向に回転させる向きが正}
-		var cross: Vector :: (#Vector).init(me.up.y * me.dir.z - me.up.z * me.dir.y, me.up.z * me.dir.x - me.up.x * me.dir.z, me.up.x * me.dir.y - me.up.y * me.dir.x)
+		var cross: Vector :: me.dir.cross(me.up)
 		do me.dir.rot(cross, angle)
 		do me.up.rot(cross, angle)
 		; do cui@print("[camera.kn] dir   = " ~ me.dir.toStr())
@@ -88,6 +88,10 @@
 			do me.z :: (axis.z * axis.x * (1.0 - cos) - axis.y * sin) * d.x + (axis.y * axis.z * (1.0 - cos) + axis.x * sin) * d.y + (axis.z * axis.z * (1.0 - cos) + cos) * d.z
 		end func
 		
+		+func cross(t: Vector): Vector
+			ret (#Vector).init(me.y * t.z - me.z * t.y, me.z * t.x - me.x * t.z, me.x * t.y - me.y * t.x)
+		end func
+
 		+*func toStr(): []char
 			ret "(" ~ me.x.toStr() ~ ", " ~ me.y.toStr() ~ ", " ~ me.z.toStr() ~ ")"
 		end func
