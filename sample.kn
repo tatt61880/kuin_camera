@@ -24,27 +24,27 @@ func main()
 end func
 
 func initCamera(camera: &\camera@Camera)
-	do camera :: (#\camera@Camera).init(0.0, 0.0, 20.0)
+	do camera :: (#\camera@Camera).init(5.0)
 end func
 
 func moveCamera(camera: &\camera@Camera)
 	if(input@pad(0, %left) > 0)
-		do camera.rotRelHor(0.03)
+		do camera.rotHor(-lib@pi / 180.0)
 	end if
 	if(input@pad(0, %right) > 0)
-		do camera.rotRelHor(-0.03)
+		do camera.rotHor(lib@pi / 180.0)
 	end if
 	if(input@pad(0, %up) > 0)
-		do camera.rotRelVer(0.03)
+		do camera.rotVer(-lib@pi / 180.0)
 	end if
 	if(input@pad(0, %down) > 0)
-		do camera.rotRelVer(-0.03)
+		do camera.rotVer(lib@pi / 180.0)
 	end if
 	if(input@pad(0, %c) > 0)
-		do camera.rotRelUp(0.03)
+		do camera.rotUp(lib@pi / 180.0)
 	end if
 	if(input@pad(0, %d) > 0)
-		do camera.rotRelUp(-0.03)
+		do camera.rotUp(-lib@pi / 180.0)
 	end if
 	if(input@pad(0, %r) > 0 | input@pad(0, %a) > 0)
 		do camera.moveDir(1.0)

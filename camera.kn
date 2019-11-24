@@ -1,6 +1,6 @@
 {
 	camera.kn:
-		Last Modified: 2019/11/23 22:38:24.
+		Last Modified: 2019/11/24 23:08:23.
 		Created by Tatt(@tatt61880)
 		https://twitter.com/tatt61880
 		https://github.com/tatt61880
@@ -9,48 +9,71 @@
 }
 +class Camera()
 	var pos: Vector
-	var dir: Vector
+	var dir: Vector {pos + dir = targetの位置}
 	var up: Vector
 	
-	+func init(x: float, y: float, z: float): @Camera
-		do me.pos :: (#Vector).init(x, y, z)
-		do me.dir :: (#Vector).init(0.0, 0.0, -1.0)
+	+func init(dist: float): @Camera
+		do me.pos :: (#Vector).init(0.0, 0.0, dist)
+		do me.dir :: (#Vector).init(0.0, 0.0, -dist)
 		do me.up :: (#Vector).init(0.0, 1.0, 0.0)
 		ret me
 	end func
 	
-	+func rotRel(horAngle: float, verAngle: float)
-		do me.rotRelHor(horAngle)
-		do me.rotRelVer(verAngle)
+	+func rotHor(angle: float)
+		{ターゲット位置を支点とするup方向の軸周りの回転. 右ねじの回転が正}
+		var target: Vector :: (##me.pos).add(me.dir)
+		do me.pos.sub(target)
+		do me.dir.sub(target)
+		do me.pos.rot(me.up, angle)
+		do me.dir.rot(me.up, angle)
+		do me.pos.add(target)
+		do me.dir.add(target)
 	end func
 	
-	+func rotRelHor(angle: float)
+	+func rotVer(angle: float)
+		{upとdirの外積(cross). ターゲット位置を支点とするcross方向の軸周りの回転. up方向に回転させる向きが正}
+		var cross: Vector :: me.up.cross(me.dir).norm()
+		var target: Vector :: (##me.pos).add(me.dir)
+		do me.pos.sub(target)
+		do me.dir.sub(target)
+		do me.pos.rot(cross, angle)
+		do me.dir.rot(cross, angle)
+		do me.up.rot(cross, angle)
+		do me.pos.add(target)
+		do me.dir.add(target)
+	end func
+	
+	+func rotUp(angle: float)
+		{upをdir周りに回転．右ねじの回転が正}
+		do me.up.rot(me.dir.norm(), angle)
+	end func
+	
+	+func rotTargetHor(angle: float)
 		{up周りの回転. 右ねじの回転が正}
 		do me.dir.rot(me.up, angle)
-		; do cui@print("[camera.kn] dir = " ~ me.dir.toStr())
 	end func
 	
-	+func rotRelVer(angle: float)
+	+func rotTargetVer(angle: float)
 		{dirとupの外積(cross). cross周りの回転. dirをup方向に回転させる向きが正}
 		var cross: Vector :: me.dir.cross(me.up)
 		do me.dir.rot(cross, angle)
 		do me.up.rot(cross, angle)
-		; do cui@print("[camera.kn] dir   = " ~ me.dir.toStr())
-		; do cui@print("[camera.kn] up    = " ~ me.up.toStr())
-		; do cui@print("[camera.kn] cross = " ~ cross.toStr())
-	end func
-	
-	+func rotRelUp(angle: float)
-		{upを回転．右ねじの回転が正}
-		do me.up.rot(me.dir, angle)
 	end func
 	
 	+func moveDir(d: float)
-		do me.pos.x :+ me.dir.x * d
-		do me.pos.y :+ me.dir.y * d
-		do me.pos.z :+ me.dir.z * d
+		var norm: Vector :: me.dir.norm()
+		if(me.pos.abs() = d)
+			ret
+		end if
+		do me.pos.x :+ norm.x * d
+		do me.pos.y :+ norm.y * d
+		do me.pos.z :+ norm.z * d
+		do me.dir.x :- norm.x * d
+		do me.dir.y :- norm.y * d
+		do me.dir.z :- norm.z * d
 	end func
 	
+	{
 	+func moveRel(x: float, y: float, z: float)
 		do me.pos.x :+ x
 		do me.pos.y :+ y
@@ -62,6 +85,7 @@
 		do me.pos.y :: y
 		do me.pos.z :: z
 	end func
+	}
 	
 	+func setCamera()
 		do draw@camera(me.pos.x, me.pos.y, me.pos.z, (me.pos.x + me.dir.x), (me.pos.y + me.dir.y), (me.pos.z + me.dir.z), me.up.x, me.up.y, me.up.z)
@@ -76,6 +100,33 @@
 			do me.x :: x
 			do me.y :: y
 			do me.z :: z
+			ret me
+		end func
+		
+		+func abs(): float
+			ret (me.x ^ 2.0 + me.y ^ 2.0 + me.z ^ 2.0) ^ 0.5
+		end func
+		
+		+func norm(): Vector
+			var res: Vector :: ##me
+			var abs: float :: res.abs()
+			do res.x :/ abs
+			do res.y :/ abs
+			do res.z :/ abs
+			ret res
+		end func
+		
+		+func add(a: Vector): Vector
+			do me.x :+ a.x
+			do me.y :+ a.y
+			do me.z :+ a.z
+			ret me
+		end func
+		
+		+func sub(a: Vector): Vector
+			do me.x :- a.x
+			do me.y :- a.y
+			do me.z :- a.z
 			ret me
 		end func
 		
